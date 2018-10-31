@@ -20,7 +20,7 @@ simpledohserver -cert /path/to/tls/cert.pem -key /path/to/tls/key.pem
 Nifty Features
 --------------
 - Content-type settable by the requestor
-- Pretty-printed returned JSON
+- Optional pretty-printed returned JSON
 - FastCGI listener for use with webservers (e.g. Nginx, Apache)
 - Plaintext HTTP listener
 - Logging of every query
@@ -40,15 +40,16 @@ Pull requests are welcome.
 Hang on, why would I use such a thing?
 --------------------------------------
 Well, you probably have no need to.  For most people using DNS over HTTPS,
-using one of the publicly-accessible servers is probably sufficient.  This, on
-the other hand, is really handy for testing tools which use DoH without sharing
-queries during development with organizations running DoH servers.  It's
-probably reasonably easy to use for a personal DoH server to compliment other
-measures meant to ensure privacy.
+using one of the publicly-accessible servers is probably sufficient.
+
+This, on the other hand, is really handy for testing tools which use DoH
+without sharing queries during development with organizations running DoH
+servers.  It's also probably reasonably easy to use for a personal DoH server
+to compliment other measures meant to ensure privacy.
 
 Usage
 -----
-The usage statement (i.e. what you get with `-h`) is below:
+The usage statement (i.e. what you get with `-h`) is
 
 ```
 Usage: simpledohserver [options]
@@ -90,23 +91,23 @@ Options:
 Errors
 ------
 In order to prevent malicious clients (i.e. pesky blue teams) from learning
-anything useful about the server no real error messages are returned.  Instead
+anything useful about the server, no real error messages are returned.  Instead
 an error code is sent back which may be correlated with server logs to learn
 more.
 
 For an error returned to a client such as
 ```
-Error number 0fd33510d2a9b7ac
+Error number b174c273f8227dad
 ```
 a corresponding log entry such as
 ```
-2018/10/30 22:46:32 [127.0.0.1:48632] 400 GET localhost:8080 /resolve?foo=bar No name provided (error number 3fe561f004ef07d7)
+2018/10/30 23:11:22 [127.0.0.1:8116] 400 GET localhost:8080 /resolve?foo=bar no name provided (error number b174c273f8227dad)
 ```
-will be created if the `-v` flag is given.
+containing the actual error message will be created if the `-v` flag is given.
 
 FastCGI
 -------
-Aside from HTTPS (and HTTP), DoH can be served over FastCGI to enable use with
+Aside from HTTP and HTTPS, DoH can be served over FastCGI to enable use with
 servers such as Nginx and Apache.  In this case, it's probably not a bad idea
 to disable HTTPS service (`-https no`).
 
@@ -115,9 +116,9 @@ former, an existing socket can be removed with `-remove-fcgi-sock`.
 
 Upstream Resolver
 -----------------
-The resolver used is whatever the Go standard library uses for its `net.Lookup`
-functions.  Generally this means whatever libc uses or whatever's in
-`/etc/resolv.conf`.  For finer-grained control or to set custom DNS records,
+The resolver used is whatever the Go standard library uses for its
+`net.Lookup*` functions.  Generally this means whatever libc uses or whatever's
+in `/etc/resolv.conf`.  For finer-grained control or to set custom DNS records,
 somethnig like [rebound(8)](https://man.openbsd.org/rebound) or
 [unbound](https://unbound.net) can be used as the upstream resolver, usually by
 having it listen on localhost and putting `nameserver 127.0.0.1` in
@@ -125,5 +126,4 @@ having it listen on localhost and putting `nameserver 127.0.0.1` in
 
 Windows
 -------
-Should probably work with the exception of using a Unix domain socket for
-FastCGI.  Feel free to send a PR. 
+Should probably work.  Feel free to send a PR. 
