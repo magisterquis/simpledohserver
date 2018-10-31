@@ -97,7 +97,7 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		h.Error(
 			w,
 			r,
-			"Parse error: "+err.Error(),
+			"parse error: "+err.Error(),
 			http.StatusBadRequest,
 		)
 		return
@@ -106,12 +106,12 @@ func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	/* Make sure we have a name and type */
 	qname := r.Form.Get(QNAME) /* Query name */
 	if "" == qname {
-		h.Error(w, r, "No name provided", http.StatusBadRequest)
+		h.Error(w, r, "no name provided", http.StatusBadRequest)
 		return
 	}
 	qtype := r.Form.Get(QTYPE) /* Query type */
 	if "" == qtype {
-		h.Error(w, r, "No query type provided", http.StatusBadRequest)
+		h.Error(w, r, "no query type provided", http.StatusBadRequest)
 		return
 	}
 
